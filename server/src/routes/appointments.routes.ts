@@ -1,12 +1,7 @@
 import { Router } from 'express';
-import { uuid } from 'uuidv4';
 import { parseISO, startOfHour, isEqual } from 'date-fns';
 
-interface Appointment {
-  provider: string;
-  id: string;
-  date: Date;
-}
+import Appointment from '../models/Appointments';
 
 const routes = Router();
 
@@ -27,11 +22,7 @@ routes.post('/', (request, response) => {
       .json({ error: 'Já existe um agendamento nesse horário' });
   }
 
-  const newAppointment = {
-    id: uuid(),
-    provider,
-    date: parsedDate,
-  };
+  const newAppointment = new Appointment(provider, parsedDate);
 
   appointments.push(newAppointment);
 
