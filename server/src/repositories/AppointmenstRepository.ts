@@ -9,6 +9,10 @@ class AppointmentsRepository {
     this.appointments = [];
   }
 
+  getAll(): Appointment[] {
+    return this.appointments;
+  }
+
   create(provider: string, date: Date): Appointment {
     const newAppointment = new Appointment(provider, date);
 
