@@ -27,7 +27,10 @@ routes.post('/', (request, response) => {
       .json({ error: 'Já existe um agendamento nesse horário' });
   }
 
-  const newAppointment = AppointmentRepository.create(provider, parsedDate);
+  const newAppointment = AppointmentRepository.create({
+    provider,
+    date: parsedDate,
+  });
 
   return response.json(newAppointment);
 });
