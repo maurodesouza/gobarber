@@ -1,27 +1,29 @@
 import { Router } from 'express';
+import { getCustomRepository } from 'typeorm';
+
 import { parseISO } from 'date-fns';
 
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentService';
 
-const routes = Router();
+const appointmentsRouter = Router();
 
-const appointmentRepository = new AppointmentsRepository();
-const createAppointment = new CreateAppointmentService(appointmentRepository);
-
-routes.get('/', (request, response) => {
-  const appointments = appointmentRepository.getAll();
+appointmentsRouter.get('/', async (request, response) => {
+  const appointmentRepository = getCustomRepository(AppointmentsRepository);
+  const appointments = await appointmentRepository.find();
 
   return response.json(appointments);
 });
 
-routes.post('/', (request, response) => {
+appointmentsRouter.post('/', async (request, response) => {
   try {
     const { provider, date } = request.body;
 
     const parsedDate = parseISO(date);
 
-    const newAppointment = createAppointment.execute({
+    const createAppointment = new CreateAppointmentService();
+
+    const newAppointment = await createAppointment.execute({
       provider,
       date: parsedDate,
     });
@@ -32,4 +34,4 @@ routes.post('/', (request, response) => {
   }
 });
 
-export default routes;
+export default appointmentsRouter;
