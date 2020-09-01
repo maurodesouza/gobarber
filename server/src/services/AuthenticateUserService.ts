@@ -4,6 +4,8 @@ import { sign } from 'jsonwebtoken';
 
 import User from '../entities/User';
 
+import authConfig from '../config/auth';
+
 interface RequestDTO {
   email: string;
   password: string;
@@ -27,9 +29,11 @@ class AuthenticateUserService {
     if (!passwordMatched)
       throw new Error('Você passou alguma informação errada');
 
-    const token = sign({}, '7fd39d791d9e874d8e5a8bab4b4d6233', {
+    const { expiresIn, secret } = authConfig.jwt;
+
+    const token = sign({}, secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn,
     });
 
     return { user, token };
