@@ -33,6 +33,6 @@ export default (
 
     return next();
   } catch {
-    throw new AppError('Faça o login para acessar essa rota! asd', 401);
+    throw new AppError('Faça o login para acessar essa rota!', 401);
   }
 };
