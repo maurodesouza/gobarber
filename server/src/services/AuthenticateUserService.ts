@@ -3,6 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import User from '../entities/User';
+import AppError from '../error/AppError';
 
 import authConfig from '../config/auth';
 
@@ -22,12 +23,12 @@ class AuthenticateUserService {
 
     const user = await userRepository.findOne({ where: { email } });
 
-    if (!user) throw new Error('Você passou alguma informação errada');
+    if (!user) throw new AppError('Você passou alguma informação errada');
 
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched)
-      throw new Error('Você passou alguma informação errada');
+      throw new AppError('Você passou alguma informação errada');
 
     const { expiresIn, secret } = authConfig.jwt;
 

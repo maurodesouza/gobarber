@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 import User from '../entities/User';
+import AppError from '../error/AppError';
 import uploadConfig from '../config/upload';
 
 interface RequestDTO {
@@ -18,7 +19,10 @@ class UpdateUserAvatarService {
     const user = await userRepository.findOne(user_id);
 
     if (!user)
-      throw new Error('Você precisa estar logado para alterar o seu avatar');
+      throw new AppError(
+        'Você precisa estar logado para alterar o seu avatar',
+        401,
+      );
 
     if (user.avatar) {
       const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);

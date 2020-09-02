@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
+import AppError from '../error/AppError';
 import authConfig from '../config/auth';
 
 interface TokenPayload {
@@ -16,7 +17,8 @@ export default (
 ): void => {
   const authHeader = request.headers.authorization;
 
-  if (!authHeader) throw new Error('Faça o login para acessar essa rota!');
+  if (!authHeader)
+    throw new AppError('Faça o login para acessar essa rota!', 401);
 
   const [, token] = authHeader.split(' ');
 
@@ -31,6 +33,6 @@ export default (
 
     return next();
   } catch {
-    throw new Error('Faça o login para acessar essa rota! asd');
+    throw new AppError('Faça o login para acessar essa rota! asd', 401);
   }
 };
