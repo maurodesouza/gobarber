@@ -23,6 +23,7 @@ export const Content = styled.div`
   form {
     margin: 80px 0;
     max-width: 340px;
+    width: 100%;
     text-align: center;
 
     h1 {
