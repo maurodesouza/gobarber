@@ -54,7 +54,11 @@ const SignIn: React.FC = () => {
           return;
         }
 
-        addToast();
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um algo!',
+          message: 'Essa é apenas uma menssagem',
+        });
       }
     },
     [signIn, addToast],
