@@ -39,7 +39,7 @@ export const Container = styled.div<ContainerProps>`
       borer
     `}
 
-  & + div {
+  & + & {
     margin-top: 8px;
   }
 

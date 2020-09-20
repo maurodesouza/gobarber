@@ -1,27 +1,48 @@
-import React, { createContext, useCallback } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
 import api from '../services/api';
 
-interface SignInData {
+interface AuthState {
+  token: string;
+  user: Record<string, unknown>;
+}
+
+interface SignInCredentials {
   email: string;
   password: string;
 }
 
 interface AuthContextData {
-  name: string;
-  signIn(credentials: SignInData): Promise<void>;
+  user: Record<string, unknown>;
+  signIn(credentials: SignInCredentials): Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const signIn = useCallback(async ({ email, password }: SignInData) => {
+  const [data, setData] = useState<AuthState>(() => {
+    const token = localStorage.getItem('@GoBarber:token');
+    const user = localStorage.getItem('@GoBarber:user');
+
+    if (token && user) {
+      return { token, user: JSON.parse(user) };
+    }
+
+    return {} as AuthState;
+  });
+
+  const signIn = useCallback(async ({ email, password }: SignInCredentials) => {
     const response = await api.post('sessions', { email, password });
 
-    console.log(response.data);
+    const { user, token } = response.data;
+
+    localStorage.setItem('@GoBarber:token', token);
+    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+
+    setData({ user, token });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ name: 'Junior', signIn }}>
+    <AuthContext.Provider value={{ user: data.user, signIn }}>
       {children}
     </AuthContext.Provider>
   );
