@@ -27,12 +27,12 @@ const Toast: React.FC<ToastProps> = ({ options, style }) => {
   useEffect(() => {
     const time = setTimeout(() => {
       removeToast(options.id);
-    }, 3000);
+    }, options.time || 3000);
 
     return () => {
       clearTimeout(time);
     };
-  }, [removeToast, options.id]);
+  }, [removeToast, options]);
 
   return (
     <S.Container style={style} type={options.type}>

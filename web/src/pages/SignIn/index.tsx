@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { FiLogIn, FiLock, FiMail } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -27,12 +27,17 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
+  const [loading, setLoading] = useState(false);
+
   const { signIn } = useAuth();
   const { addToast } = useToast();
+
+  const history = useHistory();
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -46,7 +51,11 @@ const SignIn: React.FC = () => {
           email: data.email,
           password: data.password,
         });
+
+        history.push('/dashboard');
       } catch (err) {
+        setLoading(false);
+
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -55,14 +64,19 @@ const SignIn: React.FC = () => {
           return;
         }
 
+        formRef.current?.reset();
+        formRef.current?.getFieldRef('email').focus();
+
         addToast({
           type: 'error',
-          title: 'Ocorreu um algo!',
-          message: 'Essa é apenas uma menssagem',
+          title: 'Ocorreu um erro!',
+          time: 5000,
+          message:
+            'Ocorreu um erro ao fazer o seu logon, verefique as suas informações e tente novamente',
         });
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, history],
   );
 
   return (
@@ -82,7 +96,9 @@ const SignIn: React.FC = () => {
               placeholder="Senha"
             />
 
-            <Button type="submit">Entrar</Button>
+            <Button disabled={loading} type="submit">
+              {loading ? 'Aguarde ...' : 'Entrar'}
+            </Button>
 
             <a href="fotgot">Esqueci minha senha</a>
           </Form>
