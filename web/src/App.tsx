@@ -1,22 +1,22 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 import './config/yup';
 
 import AppProvider from './hooks';
 
-import SignIn from './pages/SignIn';
-// import SignUp from './pages/SignUp';
+import Routes from './routes';
 import GlobalStyles from './styles/global';
 
 const App = () => {
   return (
-    <>
+    <BrowserRouter>
       <AppProvider>
-        <SignIn />
+        <Routes />
       </AppProvider>
 
       <GlobalStyles />
-    </>
+    </BrowserRouter>
   );
 };
 
