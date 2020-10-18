@@ -1,5 +1,13 @@
 import React from 'react';
-import { Image } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  View,
+  ScrollView,
+} from 'react-native';
+
+import { Feather } from '@expo/vector-icons';
 
 import logoImg from '../../assets/logo.png';
 
@@ -10,15 +18,41 @@ import * as S from './styles';
 
 const SignIn: React.FC = () => {
   return (
-    <S.Container>
-      <Image source={logoImg} />
-      <S.Title>Faça o seu logon</S.Title>
+    <>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled
+      >
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flex: 1 }}
+        >
+          <S.Container>
+            <Image source={logoImg} />
 
-      <Input name="email" icon="mail" placeholder="E-mail" />
-      <Input name="password" icon="lock" placeholder="Senha" />
+            <View>
+              <S.Title>Faça o seu logon</S.Title>
+            </View>
 
-      <Button>Entrar</Button>
-    </S.Container>
+            <Input name="email" icon="mail" placeholder="E-mail" />
+            <Input name="password" icon="lock" placeholder="Senha" />
+
+            <Button>Entrar</Button>
+
+            <S.ForgotPassword onPress={() => {}}>
+              <S.ForgotPasswordText>Esqueci minha senha</S.ForgotPasswordText>
+            </S.ForgotPassword>
+          </S.Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <S.CreateAccountButton onPress={() => {}}>
+        <Feather name="log-in" size={20} color="#ff9000" />
+
+        <S.CreateAccountButtonText>Criar conta</S.CreateAccountButtonText>
+      </S.CreateAccountButton>
+    </>
   );
 };
 
