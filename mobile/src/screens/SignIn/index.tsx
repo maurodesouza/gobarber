@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import logoImg from '../../assets/logo.png';
 
@@ -17,6 +18,8 @@ import Input from '../../components/Input';
 import * as S from './styles';
 
 const SignIn: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       <KeyboardAvoidingView
@@ -47,7 +50,7 @@ const SignIn: React.FC = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <S.CreateAccountButton onPress={() => {}}>
+      <S.CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
         <Feather name="log-in" size={20} color="#ff9000" />
 
         <S.CreateAccountButtonText>Criar conta</S.CreateAccountButtonText>
