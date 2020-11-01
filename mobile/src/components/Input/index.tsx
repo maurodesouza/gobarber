@@ -34,7 +34,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
 
-  const { registerField, fieldName, defaultValue = '' } = useField(name);
+  const { registerField, fieldName, defaultValue = '', error } = useField(name);
 
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
   const inputElementRef = useRef<TextInput>(null);
@@ -64,7 +64,7 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   }, [registerField, fieldName]);
 
   return (
-    <S.Container isFocused={isFocused}>
+    <S.Container isFocused={isFocused} isErrored={!!error}>
       <Feather
         name={icon}
         size={20}
