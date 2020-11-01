@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
-  Platform,
   View,
   ScrollView,
   TextInput,
@@ -28,14 +27,10 @@ const SignIn: React.FC = () => {
 
   return (
     <>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        enabled
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="position" enabled>
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flex: 1 }}
+          // contentContainerStyle={{ flex: 1 }}
         >
           <S.Container>
             <Image source={logoImg} />
