@@ -1,8 +1,10 @@
 import React, {
   useRef,
   useEffect,
+  useState,
   useImperativeHandle,
   forwardRef,
+  useCallback,
 } from 'react';
 
 import { TextInputProps, TextInput } from 'react-native';
@@ -29,6 +31,9 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   { icon, name, ...rest },
   ref,
 ) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+
   const { registerField, fieldName, defaultValue = '' } = useField(name);
 
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
@@ -40,6 +45,16 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
     },
   }));
 
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+
+    setIsFilled(!!inputValueRef.current.value);
+  }, []);
+
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -49,10 +64,16 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
   }, [registerField, fieldName]);
 
   return (
-    <S.Container>
-      <Feather name={icon} size={20} color="#666360" />
+    <S.Container isFocused={isFocused}>
+      <Feather
+        name={icon}
+        size={20}
+        color={isFocused || isFilled ? '#FF9000' : '#666360'}
+      />
       <S.Input
         ref={inputElementRef}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         keyboardAppearance="dark"
         defaultValue={defaultValue}
         placeholderTextColor="#666360"
