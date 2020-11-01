@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Form as FormUnform } from '@unform/mobile';
 
 export const Container = styled.View`
   flex: 1;
@@ -13,6 +14,10 @@ export const Title = styled.Text`
   margin: 64px 0 24px 0;
   font-family: RobotoSlab_500Medium;
   color: #f4ede8;
+`;
+
+export const Form = styled(FormUnform)`
+  width: 100%;
 `;
 
 export const ForgotPassword = styled.TouchableOpacity`
