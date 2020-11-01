@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   ScrollView,
+  TextInput,
 } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
@@ -21,6 +22,8 @@ import * as S from './styles';
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const passwordInputRef = useRef<TextInput>(null);
+
   const navigation = useNavigation();
 
   return (
@@ -42,14 +45,37 @@ const SignIn: React.FC = () => {
             </View>
 
             <S.Form ref={formRef} onSubmit={data => console.log(data)}>
-              <Input name="email" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordInputRef.current?.focus()}
+              />
+
+              <Input
+                ref={passwordInputRef}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                returnKeyType="send"
+                secureTextEntry
+                onSubmitEditing={() => formRef.current?.submitForm()}
+              />
+
               <Button onPress={() => formRef.current?.submitForm()}>
                 Entrar
               </Button>
             </S.Form>
 
-            <S.ForgotPassword onPress={() => {}}>
+            <S.ForgotPassword
+              onPress={() => {
+                //
+              }}
+            >
               <S.ForgotPasswordText>Esqueci minha senha</S.ForgotPasswordText>
             </S.ForgotPassword>
           </S.Container>

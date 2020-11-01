@@ -1,5 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { TextInputProps } from 'react-native';
+import React, {
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
+
+import { TextInputProps, TextInput } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { useField } from '@unform/core';
@@ -15,10 +21,24 @@ interface InputValueReference {
   value: string;
 }
 
-const Input: React.FC<InputProps> = ({ icon, name, ...rest }) => {
+interface InputRef {
+  focus: () => void;
+}
+
+const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
+  { icon, name, ...rest },
+  ref,
+) => {
   const { registerField, fieldName, defaultValue = '' } = useField(name);
 
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
+  const inputElementRef = useRef<TextInput>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputElementRef.current?.focus();
+    },
+  }));
 
   useEffect(() => {
     registerField({
@@ -32,6 +52,7 @@ const Input: React.FC<InputProps> = ({ icon, name, ...rest }) => {
     <S.Container>
       <Feather name={icon} size={20} color="#666360" />
       <S.Input
+        ref={inputElementRef}
         keyboardAppearance="dark"
         defaultValue={defaultValue}
         placeholderTextColor="#666360"
@@ -44,4 +65,4 @@ const Input: React.FC<InputProps> = ({ icon, name, ...rest }) => {
   );
 };
 
-export default Input;
+export default forwardRef(Input);
